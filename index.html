@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+  <title>Atomix Lab</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- ============ TITLE SCREEN ============ -->
+  <div id="screen-title" class="screen active">
+    <div class="title-logo">ATOMIX LAB</div>
+    <div class="title-subtitle">Build Molecules, Learn Chemistry</div>
+    <div class="title-stars" id="title-total-stars"></div>
+    <button class="btn btn-primary" id="btn-play">Play</button>
+    <button class="btn" id="btn-lab-map">Lab Map</button>
+    <button class="btn" id="btn-glossary">Glossary</button>
+  </div>
+
+  <!-- ============ LAB MAP ============ -->
+  <div id="screen-map" class="screen">
+    <div class="map-title">Chemistry Labs</div>
+    <div class="map-container" id="map-container"></div>
+    <button class="btn btn-small" id="btn-map-back">Back</button>
+  </div>
+
+  <!-- ============ LEVEL SELECT ============ -->
+  <div id="screen-levels" class="screen">
+    <div class="levels-header">
+      <button class="btn-back" id="btn-levels-map">&larr;</button>
+      <span id="levels-location-name">Select Level</span>
+      <span class="levels-star-count" id="levels-star-count"></span>
+    </div>
+    <div class="levels-grid" id="levels-grid"></div>
+    <button class="btn btn-small" id="btn-levels-back">Back</button>
+  </div>
+
+  <!-- ============ GAME SCREEN ============ -->
+  <div id="screen-game" class="screen">
+    <div id="game-frame-container">
+      <!-- Top bar: level name + molecule name + moves -->
+      <div class="game-top-bar">
+        <div class="game-level-name" id="hud-level-name">Level 1</div>
+        <div class="game-molecule-name" id="hud-molecule-name">Water</div>
+        <div class="game-moves">Moves: <span id="hud-moves">0</span></div>
+      </div>
+
+      <!-- Canvas area -->
+      <div class="game-canvas-wrap">
+        <canvas id="game-canvas"></canvas>
+        <!-- Molecule preview panel -->
+        <div class="molecule-preview">
+          <canvas id="molecule-preview" width="112" height="112"></canvas>
+        </div>
+      </div>
+
+      <!-- D-pad touch controls -->
+      <div class="touch-dpad" id="touch-dpad">
+        <button class="dpad-btn dpad-up" data-dir="up">&#9650;</button>
+        <button class="dpad-btn dpad-left" data-dir="left">&#9664;</button>
+        <button class="dpad-btn dpad-center">&#9670;</button>
+        <button class="dpad-btn dpad-right" data-dir="right">&#9654;</button>
+        <button class="dpad-btn dpad-down" data-dir="down">&#9660;</button>
+      </div>
+
+      <!-- Bottom bar: hint + controls -->
+      <div class="game-bottom-bar">
+        <button class="hint-btn" id="btn-hint">
+          <span class="hint-icon">&#128161;</span>
+          <span class="hint-label">Hint</span>
+        </button>
+
+        <div class="game-controls">
+          <button class="ctrl-btn" id="btn-undo" title="Undo (Z)">Undo</button>
+          <button class="ctrl-btn" id="btn-restart" title="Restart (R)">Restart</button>
+          <button class="ctrl-btn" id="btn-menu" title="Menu (Esc)">Menu</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ VICTORY OVERLAY ============ -->
+  <div id="overlay-victory" class="overlay hidden">
+    <div class="overlay-panel">
+      <div class="overlay-title">Molecule Complete!</div>
+      <div class="overlay-stars" id="victory-stars"></div>
+      <div class="overlay-stats" id="victory-stats"></div>
+      <div class="overlay-molecule-recap" id="victory-molecule-info" style="display:none"></div>
+      <div class="overlay-buttons">
+        <button class="btn btn-small" id="btn-victory-restart">Retry</button>
+        <button class="btn btn-small btn-primary" id="btn-victory-next">Next Level</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MOLECULE INFO OVERLAY ============ -->
+  <div id="overlay-molecule-info" class="overlay hidden">
+    <div class="overlay-panel overlay-panel-wide">
+      <div class="overlay-title" id="molecule-info-name">Water</div>
+      <div class="molecule-info-formula" id="molecule-info-formula">H&#x2082;O</div>
+      <div class="molecule-info-diagram">
+        <canvas id="molecule-info-canvas" width="200" height="160"></canvas>
+      </div>
+      <div class="bond-legend">
+        <span class="bond-single">&#8212; Single Bond</span>
+        <span class="bond-double">&#9552; Double Bond</span>
+      </div>
+      <div class="molecule-info-fact" id="molecule-info-fact"></div>
+      <div class="overlay-buttons">
+        <button class="btn btn-small btn-primary" id="btn-info-start">Start Level</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ TUTORIAL OVERLAY ============ -->
+  <div id="overlay-tutorial" class="overlay hidden">
+    <div class="overlay-panel">
+      <div class="tutorial-icon" id="tutorial-icon"></div>
+      <div class="overlay-title" id="tutorial-title">How to Play</div>
+      <div class="tutorial-desc" id="tutorial-desc"></div>
+      <div class="overlay-buttons">
+        <button class="btn btn-small btn-primary" id="btn-tutorial-ok">Got it</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ GLOSSARY OVERLAY ============ -->
+  <div id="overlay-glossary" class="overlay hidden">
+    <div class="overlay-panel overlay-panel-glossary">
+      <div class="overlay-title">Glossary</div>
+      <div class="glossary-tabs">
+        <button class="glossary-tab active" data-tab="elements">Elements</button>
+        <button class="glossary-tab" data-tab="molecules">Molecules</button>
+      </div>
+      <div class="glossary-content">
+        <div class="glossary-grid" id="glossary-elements"></div>
+        <div class="glossary-grid" id="glossary-molecules" style="display:none"></div>
+      </div>
+      <div class="overlay-buttons">
+        <button class="btn btn-small" id="btn-glossary-close">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ CAMPAIGN COMPLETE OVERLAY ============ -->
+  <div id="overlay-campaign" class="overlay hidden">
+    <div class="overlay-panel">
+      <div class="overlay-title">All Labs Complete!</div>
+      <div class="overlay-stats" id="campaign-stats"></div>
+      <div class="overlay-buttons">
+        <button class="btn btn-small" id="btn-campaign-levels">Level Select</button>
+        <button class="btn btn-small" id="btn-campaign-menu">Main Menu</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Element tooltip -->
+  <div id="element-tooltip" class="element-tooltip hidden"></div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Scripts (load order matters) -->
+  <script src="sdk/mesa-sdk.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/molecules.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/levels.js"></script>
+  <script src="js/solver.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

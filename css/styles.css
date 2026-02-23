@@ -1,0 +1,1106 @@
+/* ========================================
+   Atomix Lab -- Styles
+   Chemistry-lab dark theme
+   ======================================== */
+
+:root {
+  --bg-dark: #0a0e14;
+  --bg-lab: #0f1520;
+  --bg-panel: #141c28;
+  --text-light: #c8d8e8;
+  --text-dim: #6888a8;
+  --primary: #4af0ff;
+  --primary-glow: rgba(74, 240, 255, 0.3);
+  --accent: #44cc66;
+  --accent-glow: rgba(68, 204, 102, 0.3);
+  --warning: #ffaa44;
+  --danger: #ff4444;
+  --star-color: #ffcc44;
+  --panel-border: #1e3048;
+  --panel-border-light: #2a4060;
+  --shadow: rgba(0, 0, 0, 0.5);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg-dark);
+  color: var(--text-light);
+  font-family: 'Segoe UI', 'Helvetica', sans-serif;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* ---- Screen Management ---- */
+
+.screen {
+  display: none;
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.screen.active {
+  display: flex;
+}
+
+/* ---- Title Screen ---- */
+
+#screen-title {
+  background: radial-gradient(ellipse at center, #0f1a28 0%, var(--bg-dark) 70%);
+  gap: 20px;
+  text-align: center;
+}
+
+.title-logo {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: var(--primary);
+  text-shadow: 0 0 20px var(--primary-glow), 0 2px 4px rgba(0, 0, 0, 0.8);
+  letter-spacing: 6px;
+  animation: title-glow 3s ease-in-out infinite;
+}
+
+@keyframes title-glow {
+  0%, 100% { text-shadow: 0 0 20px var(--primary-glow), 0 2px 4px rgba(0,0,0,0.8); }
+  50% { text-shadow: 0 0 40px rgba(74,240,255,0.6), 0 0 80px rgba(74,240,255,0.2), 0 2px 4px rgba(0,0,0,0.8); }
+}
+
+.title-subtitle {
+  font-size: 1.2rem;
+  color: var(--text-dim);
+  font-weight: 300;
+  margin-top: -10px;
+  letter-spacing: 1px;
+}
+
+.title-stars {
+  font-size: 0.9rem;
+  color: var(--star-color);
+  margin-top: 4px;
+}
+
+/* ---- Buttons ---- */
+
+.btn {
+  display: inline-block;
+  padding: 12px 36px;
+  font-family: inherit;
+  font-size: 1.1rem;
+  color: var(--text-light);
+  background: var(--bg-panel);
+  border: 2px solid var(--panel-border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  min-width: 180px;
+}
+
+.btn:hover {
+  background: var(--bg-lab);
+  border-color: var(--primary);
+  color: var(--primary);
+  box-shadow: 0 0 12px var(--primary-glow);
+}
+
+.btn:active {
+  transform: scale(0.95);
+  box-shadow: none;
+}
+
+.btn-primary {
+  border-color: var(--primary);
+  color: var(--primary);
+  font-size: 1.3rem;
+}
+
+.btn-primary:hover {
+  box-shadow: 0 0 18px rgba(74, 240, 255, 0.35);
+}
+
+.btn-small {
+  padding: 8px 20px;
+  font-size: 0.9rem;
+  min-width: 0;
+}
+
+.btn-back {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  font-family: inherit;
+  transition: color 0.2s ease;
+}
+
+.btn-back:hover {
+  color: var(--primary);
+}
+
+/* ---- Lab Map ---- */
+
+#screen-map {
+  background: radial-gradient(ellipse at center, #0f1a28 0%, var(--bg-dark) 70%);
+  gap: 16px;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.map-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--primary);
+  text-align: center;
+  text-shadow: 0 0 12px var(--primary-glow);
+  margin-bottom: 8px;
+}
+
+.map-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  max-width: 400px;
+  width: 100%;
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 0;
+}
+
+/* Path connector between labs */
+.map-path {
+  width: 2px;
+  height: 24px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--panel-border) 0px,
+    var(--panel-border) 4px,
+    transparent 4px,
+    transparent 8px
+  );
+}
+
+/* Lab location card */
+.map-location {
+  width: 100%;
+  padding: 16px 20px;
+  background: var(--bg-panel);
+  border: 2px solid var(--panel-border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.map-location.stagger-in {
+  animation: slide-up 0.35s ease forwards;
+}
+
+@keyframes slide-up {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.map-path.stagger-in {
+  animation: fade-in 0.2s ease forwards;
+  opacity: 0;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.map-location:hover:not(.locked) {
+  background: var(--bg-lab);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.map-location.active {
+  border-color: var(--loc-color, var(--primary));
+  box-shadow: 0 0 12px color-mix(in srgb, var(--loc-color, var(--primary)) 40%, transparent);
+}
+
+.map-location.completed {
+  border-color: var(--panel-border);
+  opacity: 0.75;
+}
+
+.map-location.locked {
+  opacity: 0.35;
+  cursor: default;
+  filter: grayscale(0.5);
+}
+
+.map-loc-name {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--loc-color, var(--text-light));
+  margin-bottom: 4px;
+}
+
+.map-loc-stars {
+  font-size: 0.85rem;
+  color: var(--star-color);
+}
+
+.map-loc-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  font-weight: 300;
+}
+
+.map-loc-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  padding: 2px 10px;
+  border-radius: 10px;
+  margin-top: 6px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.badge-complete {
+  background: rgba(68, 204, 102, 0.15);
+  color: var(--accent);
+  border: 1px solid rgba(68, 204, 102, 0.3);
+}
+
+.badge-active {
+  background: color-mix(in srgb, var(--loc-color, var(--primary)) 15%, transparent);
+  color: var(--loc-color, var(--primary));
+  border: 1px solid color-mix(in srgb, var(--loc-color, var(--primary)) 30%, transparent);
+}
+
+/* ---- Level Select ---- */
+
+#screen-levels {
+  background: var(--bg-dark);
+  gap: 16px;
+  padding: 20px;
+}
+
+.levels-header {
+  font-size: 1.2rem;
+  color: var(--primary);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  width: 100%;
+  max-width: 450px;
+}
+
+.levels-header .levels-star-count {
+  font-size: 0.85rem;
+  color: var(--star-color);
+  margin-left: auto;
+}
+
+.levels-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  max-width: 450px;
+  width: 100%;
+}
+
+.level-cell {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-panel);
+  border: 2px solid var(--panel-border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-size: 1.1rem;
+  gap: 2px;
+}
+
+.level-cell:hover:not(.locked) {
+  border-color: var(--primary);
+  background: var(--bg-lab);
+  box-shadow: 0 0 8px var(--primary-glow);
+}
+
+.level-cell:active:not(.locked) {
+  transform: scale(0.95);
+}
+
+.level-cell.locked {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.level-cell.completed {
+  border-color: var(--text-dim);
+}
+
+.level-cell .level-num {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.level-cell .level-molecule-name {
+  font-size: 0.55rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.level-cell .level-stars {
+  font-size: 0.7rem;
+  color: var(--star-color);
+  letter-spacing: 1px;
+}
+
+.level-cell .level-element {
+  font-size: 0.55rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Synthesis level cell */
+.level-cell.synthesis {
+  border-color: var(--primary);
+  border-width: 2px;
+  position: relative;
+}
+
+.level-cell.synthesis:not(.locked) {
+  animation: synthesis-pulse 2s ease-in-out infinite;
+}
+
+@keyframes synthesis-pulse {
+  0%, 100% { box-shadow: 0 0 8px var(--primary-glow); }
+  50% { box-shadow: 0 0 18px rgba(74, 240, 255, 0.5); }
+}
+
+.level-cell.synthesis.locked {
+  border-color: var(--primary);
+  opacity: 0.5;
+}
+
+.level-lock-info {
+  font-size: 0.65rem;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* ---- Game Screen ---- */
+
+#screen-game {
+  background: var(--bg-dark);
+  padding: 0;
+}
+
+#game-frame-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* Top bar */
+.game-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 700px;
+  padding: 8px 16px;
+  background: var(--bg-panel);
+  border-bottom: 2px solid var(--panel-border);
+}
+
+.game-level-name {
+  font-size: 1.1rem;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.game-molecule-name {
+  font-size: 0.95rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.game-moves {
+  font-size: 0.95rem;
+  color: var(--text-light);
+}
+
+.game-moves span {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+/* Canvas area */
+.game-canvas-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+#game-canvas {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  touch-action: none;
+}
+
+.game-canvas-wrap::before {
+  content: '';
+  position: absolute;
+  top: 4px; left: 4px; right: 4px; bottom: 4px;
+  border: 1px solid rgba(30, 48, 72, 0.3);
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Molecule preview */
+.molecule-preview {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(15, 21, 32, 0.85);
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+  padding: 4px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.molecule-preview canvas {
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
+}
+
+/* ---- D-Pad Touch Controls ---- */
+
+.touch-dpad {
+  display: none;
+  grid-template-columns: repeat(3, 44px);
+  grid-template-rows: repeat(3, 44px);
+  gap: 3px;
+  padding: 6px 0;
+  justify-content: center;
+}
+
+.dpad-up    { grid-column: 2; grid-row: 1; }
+.dpad-left  { grid-column: 1; grid-row: 2; }
+.dpad-center{ grid-column: 2; grid-row: 2; }
+.dpad-right { grid-column: 3; grid-row: 2; }
+.dpad-down  { grid-column: 2; grid-row: 3; }
+
+.dpad-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-lab);
+  border: 2px solid var(--panel-border);
+  border-radius: 6px;
+  color: var(--text-dim);
+  font-size: 1.1rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.dpad-btn:active {
+  background: var(--bg-panel);
+  border-color: var(--primary);
+  color: var(--primary);
+  transform: scale(0.92);
+}
+
+.dpad-center {
+  background: var(--bg-panel);
+  border-color: rgba(30, 48, 72, 0.4);
+  font-size: 0.7rem;
+  color: rgba(104, 136, 168, 0.4);
+  cursor: default;
+}
+
+.dpad-center:active {
+  transform: none;
+  background: var(--bg-panel);
+  border-color: rgba(30, 48, 72, 0.4);
+  color: rgba(104, 136, 168, 0.4);
+}
+
+/* ---- Bottom bar ---- */
+
+.game-bottom-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 700px;
+  padding: 8px 16px;
+  background: var(--bg-panel);
+  border-top: 2px solid var(--panel-border);
+  flex-wrap: wrap;
+}
+
+/* Hint button */
+.hint-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 18px;
+  background: var(--bg-lab);
+  border: 2px solid var(--primary);
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--primary);
+  transition: all 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hint-btn:hover {
+  background: rgba(74, 240, 255, 0.08);
+  box-shadow: 0 0 12px var(--primary-glow);
+}
+
+.hint-btn:active {
+  transform: scale(0.95);
+}
+
+.hint-btn.disabled {
+  opacity: 0.3;
+  cursor: default;
+  border-color: var(--panel-border);
+  color: var(--text-dim);
+}
+
+/* Control buttons */
+.game-controls {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.ctrl-btn {
+  padding: 6px 12px;
+  background: var(--bg-lab);
+  border: 1px solid var(--panel-border);
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  transition: all 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ctrl-btn:hover {
+  border-color: var(--text-dim);
+  color: var(--text-light);
+}
+
+.ctrl-btn:active {
+  transform: scale(0.93);
+}
+
+/* ---- Element Tooltip ---- */
+
+.element-tooltip {
+  position: fixed;
+  background: var(--bg-panel);
+  border: 1px solid var(--panel-border-light);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  color: var(--text-light);
+  z-index: 50;
+  pointer-events: none;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px var(--shadow);
+  transition: opacity 0.15s ease;
+}
+
+.element-tooltip.hidden {
+  opacity: 0;
+}
+
+.element-tooltip .tooltip-symbol {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-right: 6px;
+}
+
+.element-tooltip .tooltip-name {
+  color: var(--text-dim);
+}
+
+/* ---- Overlays ---- */
+
+.overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, background 0.3s ease;
+}
+
+.overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+  background: rgba(0, 0, 0, 0);
+}
+
+.overlay-panel {
+  background: var(--bg-panel);
+  border: 3px solid var(--panel-border);
+  border-radius: 10px;
+  padding: 32px 40px;
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+
+.overlay.visible .overlay-panel {
+  transform: scale(1);
+}
+
+.overlay-panel-wide {
+  max-width: 440px;
+}
+
+.overlay-panel-glossary {
+  max-width: 500px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.overlay-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 16px;
+  text-shadow: 0 0 12px var(--primary-glow);
+}
+
+.overlay-stars {
+  font-size: 2.2rem;
+  letter-spacing: 6px;
+  margin-bottom: 12px;
+}
+
+.overlay-stars .star-on {
+  color: var(--star-color);
+  display: inline-block;
+  opacity: 0;
+  transform: scale(0);
+  animation: star-pop 0.4s ease forwards;
+}
+
+.overlay-stars .star-on:nth-child(1) { animation-delay: 0.15s; }
+.overlay-stars .star-on:nth-child(2) { animation-delay: 0.30s; }
+.overlay-stars .star-on:nth-child(3) { animation-delay: 0.45s; }
+
+@keyframes star-pop {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.35); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.overlay-stars .star-off { color: var(--panel-border); }
+
+.overlay-stats {
+  font-size: 0.95rem;
+  color: var(--text-dim);
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+
+.overlay-stats strong {
+  color: var(--text-light);
+}
+
+/* Molecule recap in victory overlay */
+.overlay-molecule-recap {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+  padding: 10px;
+  background: rgba(10, 14, 20, 0.5);
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+}
+
+.overlay-molecule-recap .recap-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+.overlay-molecule-recap .recap-formula {
+  color: var(--text-light);
+}
+
+.overlay-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ---- Molecule Info Overlay ---- */
+
+.molecule-info-formula {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-light);
+  margin-bottom: 12px;
+  letter-spacing: 1px;
+}
+
+.molecule-info-diagram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  padding: 8px;
+  background: rgba(10, 14, 20, 0.6);
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+}
+
+.molecule-info-diagram canvas {
+  max-width: 200px;
+  max-height: 160px;
+  display: block;
+}
+
+.bond-legend {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+}
+
+.bond-legend .bond-single { color: var(--text-dim); }
+.bond-legend .bond-double { color: var(--primary); }
+
+.molecule-info-fact {
+  font-size: 0.88rem;
+  color: var(--text-dim);
+  font-style: italic;
+  margin-bottom: 20px;
+  line-height: 1.5;
+  padding: 8px 12px;
+  background: rgba(74, 240, 255, 0.03);
+  border-left: 3px solid var(--primary);
+  border-radius: 0 4px 4px 0;
+  text-align: left;
+}
+
+/* ---- Tutorial Overlay ---- */
+
+.tutorial-icon {
+  font-size: 3rem;
+  margin-bottom: 8px;
+  color: var(--primary);
+}
+
+.tutorial-desc {
+  font-size: 0.95rem;
+  color: var(--text-dim);
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+/* ---- Glossary Overlay ---- */
+
+.glossary-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 16px;
+  border-bottom: 2px solid var(--panel-border);
+}
+
+.glossary-tab {
+  flex: 1;
+  padding: 8px 16px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.glossary-tab:hover {
+  color: var(--text-light);
+}
+
+.glossary-tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+.glossary-content {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 16px;
+  max-height: 50vh;
+}
+
+.glossary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 8px;
+  padding: 4px;
+}
+
+.glossary-card {
+  background: rgba(10, 14, 20, 0.5);
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+  padding: 10px 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border-top: 3px solid var(--element-color, var(--primary));
+}
+
+.glossary-card:hover {
+  border-color: var(--element-color, var(--primary));
+  box-shadow: 0 0 8px color-mix(in srgb, var(--element-color, var(--primary)) 30%, transparent);
+  transform: translateY(-2px);
+}
+
+.glossary-card .card-symbol {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--element-color, var(--primary));
+  margin-bottom: 2px;
+}
+
+.glossary-card .card-name {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.glossary-card .card-number {
+  font-size: 0.6rem;
+  color: rgba(104, 136, 168, 0.5);
+}
+
+.glossary-card.molecule-card {
+  border-top-color: var(--accent);
+}
+
+.glossary-card.molecule-card .card-symbol {
+  color: var(--accent);
+  font-size: 1rem;
+}
+
+/* ---- Toast ---- */
+
+.toast {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+  padding: 8px 20px;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  z-index: 200;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.toast.visible {
+  opacity: 1;
+}
+
+/* ---- Touch Device Styles ---- */
+
+@media (pointer: coarse) {
+  .touch-dpad {
+    display: grid;
+  }
+
+  .hint-btn {
+    min-height: 44px;
+    padding: 8px 18px;
+  }
+
+  .ctrl-btn {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 8px 14px;
+    font-size: 0.85rem;
+  }
+
+  .btn {
+    min-height: 48px;
+  }
+
+  .btn-small {
+    min-height: 44px;
+  }
+
+  .level-cell {
+    min-height: 52px;
+  }
+}
+
+/* ---- Responsive ---- */
+
+@media (max-width: 600px) {
+  .title-logo {
+    font-size: 2.2rem;
+  }
+
+  .levels-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+
+  .game-top-bar, .game-bottom-bar {
+    padding: 6px 10px;
+  }
+
+  .hint-btn {
+    padding: 5px 14px;
+    font-size: 0.82rem;
+  }
+
+  .overlay-panel {
+    padding: 24px 20px;
+  }
+
+  .map-location {
+    padding: 12px 16px;
+  }
+
+  .map-loc-name {
+    font-size: 1rem;
+  }
+
+  .game-level-name {
+    font-size: 0.9rem;
+  }
+
+  .game-bottom-bar {
+    gap: 5px;
+  }
+
+  .game-controls {
+    margin-left: 0;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .molecule-preview {
+    max-width: 90px;
+    max-height: 90px;
+  }
+
+  .glossary-grid {
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  }
+}
+
+@media (max-width: 400px) {
+  .touch-dpad {
+    grid-template-columns: repeat(3, 40px);
+    grid-template-rows: repeat(3, 40px);
+    gap: 2px;
+  }
+
+  .hint-btn {
+    padding: 4px 10px;
+    font-size: 0.78rem;
+  }
+
+  .molecule-preview {
+    max-width: 72px;
+    max-height: 72px;
+  }
+
+  .glossary-grid {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 6px;
+  }
+
+  .glossary-card {
+    padding: 8px 6px;
+  }
+}
